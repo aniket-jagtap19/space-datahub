@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Space Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #0b0f1a;
+            color: white;
+            text-align: center;
+        }
+
+        img {
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Space Dashboard</h1>
+
+<button onclick="loadApod()">Load Astronomical pic of the day  </button>
+<div id="apod"></div>
+
+<button onclick="loadAsteroids()">Load Asteroids data </button>
+<div id="asteroids"></div>
+
+<script>
+    async function loadApod() {
+        try {
+            const res = await fetch('/api/apod');
+            const data = await res.json();
+
+            document.getElementById('apod').innerHTML = `
+                <h2>${data.title}</h2>
+                <img src="${data.url}" width="500"/>
+                <p>${data.explanation}</p>
+            `;
+        } catch (error) {
+            document.getElementById('apod').innerHTML = "Failed to load APOD";
+        }
+    }
+
+    async function loadAsteroids() {
+    try {
+        const res = await fetch('http://localhost:8080/api/asteroids?start=2024-04-01&end=2024-04-03');
+
+        if (!res.ok) {
+            throw new Error("HTTP error " + res.status);
+        }
+
+        const data = await res.json();
+
+        let html = "<h2>Asteroids</h2>";
+
+        data.forEach(a => {
+            html += `<p>${a.name} - ${a.hazardous ? ":( Dangerous" : "Safe"}</p>`;
+        });
+
+        document.getElementById('asteroids').innerHTML = html;
+
+    } catch (error) {
+        console.error(error);
+        document.getElementById('asteroids').innerHTML = "Failed to load asteroids";
+    }
+}
+</script>
+
+</body>
+</html>

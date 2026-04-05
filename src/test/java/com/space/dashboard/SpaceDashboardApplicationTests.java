@@ -1,4 +1,4 @@
-package com.space.space_dashboard;
+package com.space.dashboard;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
